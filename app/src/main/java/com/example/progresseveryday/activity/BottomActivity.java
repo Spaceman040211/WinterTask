@@ -40,9 +40,6 @@ public class BottomActivity extends AppCompatActivity implements View.OnClickLis
     };
 
 
-
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +117,7 @@ public class BottomActivity extends AppCompatActivity implements View.OnClickLis
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String articleList = ArticleUtil.getArticle("0");
+                        String articleList = getArticleList();
                         Message message = Message.obtain();
                         message.what = 0;
                         message.obj = articleList;
@@ -172,8 +169,8 @@ public class BottomActivity extends AppCompatActivity implements View.OnClickLis
         }
 
     }
-    private void getArticleList(String article){
-        getArticleList(article);
+    private String getArticleList(){
+        return ArticleUtil.doGet("https://www.wanandroid.com/article/list/0/json");
     }
 
 }

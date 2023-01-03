@@ -60,7 +60,7 @@ public class ArticleUtil {
         return bookISONString;
     }
     public static String getArticle(String page){
-        String articleUrl = ARTICLE_URL+"&page="+page;
+        String articleUrl = ARTICLE_URL+"?page="+page;
         Log.d("fan","========article====" + articleUrl);
         String articleResult = doGet(articleUrl);
 
