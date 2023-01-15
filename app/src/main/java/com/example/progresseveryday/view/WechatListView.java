@@ -4,5 +4,5 @@ import com.example.progresseveryday.model.WechatListModel;
 
 public interface WechatListView {
 
-    void getWechartListData(WechatListModel model);
+    void getWechatListData(WechatListModel model);
 }
