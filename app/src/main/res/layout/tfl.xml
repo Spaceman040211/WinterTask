@@ -9,5 +9,6 @@
     android:focusable="true"
     android:textColor="@color/white"
     android:textStyle="bold"
+
     android:background="#B0E2FF">
 </TextView>
