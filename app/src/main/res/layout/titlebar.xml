@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rl_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_serach"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@mipmap/ic_search"
+            android:layout_centerVertical="true"
+            android:layout_margin="4dp"/>
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@id/iv_serach"
+            android:background="@null"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:hint="发现更多干货"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
