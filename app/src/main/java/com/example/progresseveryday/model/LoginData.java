@@ -4,16 +4,15 @@ import java.util.List;
 
 public class LoginData {
 
-    private List<String> ids;
-
+    private List<String> collectIds;
     private String username;
 
-    public List<String> getIds() {
-        return ids;
+    public List<String> getCollectIds() {
+        return collectIds;
     }
 
-    public void setIds(List<String> ids) {
-        this.ids = ids;
+    public void setCollectIds(List<String> collectIds) {
+        this.collectIds = collectIds;
     }
 
     public String getUsername() {
@@ -23,4 +22,5 @@ public class LoginData {
     public void setUsername(String username) {
         this.username = username;
     }
+
 }
