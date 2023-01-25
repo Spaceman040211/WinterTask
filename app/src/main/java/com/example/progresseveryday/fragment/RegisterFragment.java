@@ -1,11 +1,13 @@
 package com.example.progresseveryday.fragment;
 
+import android.app.Instrumentation;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
+import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,63 +19,107 @@ import android.widget.Toast;
 
 import com.example.progresseveryday.R;
 import com.example.progresseveryday.activity.RegisterActivity;
+import com.example.progresseveryday.model.RegisterModel;
+import com.example.progresseveryday.presenter.RegisterPresenter;
+import com.example.progresseveryday.view.RegisterView;
+
+public class RegisterFragment extends Fragment implements View.OnClickListener, RegisterView {
+
+    View view;
+    private EditText etName;
+    private EditText etPassword;
+    private EditText etConfirmPassword;
+    private TextView tvRegister;
+    private TextView tvLogin;
+
+    String username;
+    String password;
+    String repassword;
+
+    RegisterPresenter registerPresenter;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment_register, container, false);
+
+        registerPresenter = new RegisterPresenter(this);
+
+        initView();
+
+        return view;
+    }
+
+    private void initView() {
+
+        etName = view.findViewById(R.id.edt_username);
+        etPassword = view.findViewById(R.id.edt_password);
+        etConfirmPassword = view.findViewById(R.id.edt_confirm_password);
+        tvRegister = view.findViewById(R.id.bt_register);
 
 
-public class RegisterFragment extends Fragment {
-
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-
-    private String mParam1;
-    private String mParam2;
-
-    private TextView tvHead;
-    private EditText etUsername,etPassword,etConfirmPassword;
-    private ImageView ivLogo;
-    private Button btRegister;
-
-    public RegisterFragment() {
+        tvRegister.setOnClickListener(this);
 
     }
 
-
-    public static RegisterFragment newInstance(String param1, String param2) {
-        RegisterFragment fragment = new RegisterFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static Fragment newInstance() {
+        return new RegisterFragment();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_register://注册
+                username = etName.getText().toString().trim();
+                password = etPassword.getText().toString().trim();
+                repassword = etConfirmPassword.getText().toString().trim();
+
+                if (username.isEmpty()) {
+                    Toast.makeText(getContext(), "用户名不能为空！", Toast.LENGTH_SHORT).show();
+                } else if (password.isEmpty()) {
+                    Toast.makeText(getContext(), "密码不能为空！", Toast.LENGTH_SHORT).show();
+                } else if (repassword.isEmpty()) {
+                    Toast.makeText(getContext(), "确认密码不能为空！", Toast.LENGTH_SHORT).show();
+                }
+
+                registerPresenter.loadRegister(getContext(), username, password, repassword);
+
+                break;
+
+        }
+    }
+
+    private void toLoginFragment() {
+
+        //模拟返回键
+        new Thread() {
+            public void run() {
+                try {
+                    Instrumentation inst = new Instrumentation();
+                    inst.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+    }
+
+    /**
+     * 注册
+     *
+     * @param model
+     */
+    @Override
+    public void getRegisterData(RegisterModel model) {
+
+        if (model.getErrorCode().equals("0")) {
+            toLoginFragment();
+            Toast.makeText(getContext(), "注册成功", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), model.getErrorMsg(), Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_register, container, false);
-
-
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        tvHead=view.findViewById(R.id.textview_head);
-        ivLogo=view.findViewById(R.id.img_login_logo);
-        etUsername=view.findViewById(R.id.edt_username);
-        etPassword=view.findViewById(R.id.edt_password);
-        etConfirmPassword=view.findViewById(R.id.edt_confirm_password);
-        btRegister=view.findViewById(R.id.bt_register);
     }
 }
