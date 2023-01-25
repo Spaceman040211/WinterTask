@@ -1,69 +1,299 @@
 package com.example.progresseveryday.fragment;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.text.TextUtils;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.example.progresseveryday.R;
+import com.example.progresseveryday.adapter.RvHomeAdapter;
+import com.example.progresseveryday.model.ArticleData;
+import com.example.progresseveryday.model.ArticleDatasBean;
+import com.example.progresseveryday.model.ArticleModel;
+import com.example.progresseveryday.presenter.ArticlePresenter;
+import com.example.progresseveryday.utils.StatusBarUtil;
+import com.example.progresseveryday.view.ArticleView;
+import com.example.progresseveryday.views.IosLoadDialog;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements ArticleView {
 
-    public static final String ARG_PARAM1 = "param1";
-    public static final String ARG_PARAM2 = "param2";
+    FrameLayout framelayout;
+    NestedScrollView scrollview;
 
-    private String mParam1;
-    private String mParam2;
 
-    private TextView tvArticle;
+    private RecyclerView recyclerView;
+    private RvHomeAdapter rvHomeAdapter;
+    View view;
+    //定义头部view
+    View viewHeader;
+    private String link;
+    private String title;
+    private List<String> linkList = new ArrayList<>();
+    private List<String> titleList = new ArrayList<>();
 
-    public HomeFragment() {
+    ArticlePresenter articlePresenter;
+    List<ArticleDatasBean> articleDatas;
 
-    }
+    private SmartRefreshLayout refreshLayout;
 
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    int page = 0;
+
+    private static final int STATE_NORMAL = 0;
+    private static final int STATE_REFRESH = 1;
+    private static final int STATE_MORE = 2;
+
+    private IosLoadDialog dialog;
+
+    //当前状态
+    private int state = STATE_NORMAL;
+
+    private ImageView item_home_love;
+
+    protected Activity mActivity;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        dialog = new IosLoadDialog(this.getContext());
+        dialog.show();
+
+        scrollview = view.findViewById(R.id.scrollview);
+        framelayout = view.findViewById(R.id.framelayout);
+        refreshLayout = view.findViewById(R.id.refreshLayout);
+        articlePresenter = new ArticlePresenter(this);
+
+        initRecyclerView();
+        initRefreshLayout();
+
+
+        articlePresenter.loadArticle(this.getContext(), String.valueOf(page));
+
+        initTitleEvent();
+
+        return view;
+    }
+
+    private void initTitleEvent() {
+
+        framelayout.setBackgroundColor(Color.argb(0, 124, 199, 234));
+        scrollview.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+
+                int scrollY = scrollview.getScrollY();
+                if (scrollY <= 0) {
+                    framelayout.setBackgroundColor(Color.argb(0, 124, 199, 234));
+                } else if (scrollY > 0 && scrollY <= 255) {
+
+                    float scale = (float) scrollY / 255;
+                    float alpha = (float) 255 * scale;
+                    framelayout.setBackgroundColor(Color.argb((int) alpha, 124, 199, 234));
+                } else if (scrollY > 255) {
+                    /**
+                     * alpha 范围是0-255
+                     */
+                    framelayout.setBackgroundColor(Color.argb(255, 124, 199, 234));
+                }
+
+            }
+        });
+
+    }
+
+
+    private void initRefreshLayout() {
+
+        refreshLayout.setEnableLoadMore(true);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                refreshData();
+            }
+        });
+
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                loadMoreData();
+            }
+        });
+
+    }
+
+    private void loadMoreData() {
+
+        page = ++page;
+        state = STATE_MORE;
+        articlePresenter.loadArticle(this.getContext(), String.valueOf(page));
+
+    }
+
+    private void refreshData() {
+
+        page = 0;
+        state = STATE_REFRESH;
+        articlePresenter.loadArticle(this.getContext(), String.valueOf(page));
+
+    }
+
+
+    private void initRecyclerView() {
+        recyclerView = view.findViewById(R.id.recyclerview);
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        viewHeader = LayoutInflater.from(this.getContext()).inflate(R.layout.item_header, (ViewGroup) recyclerView.getParent(), false);
+    }
+
+
+
+
+
+    private void showData() {
+
+        switch (state) {
+            case STATE_NORMAL:
+                rvHomeAdapter = new RvHomeAdapter(articleDatas);
+                //Recyclerview添加头部布局
+                rvHomeAdapter.setHeaderView(viewHeader);
+                recyclerView.setAdapter(rvHomeAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                // 设置item及item中控件的点击事件
+                rvHomeAdapter.setOnItemClickListener(MyItemClickListener);
+                break;
+
+            case STATE_REFRESH:
+                if (rvHomeAdapter != null)
+                    rvHomeAdapter.clearData();
+                rvHomeAdapter = new RvHomeAdapter(articleDatas);
+                //Recyclerview添加头部布局
+                rvHomeAdapter.setHeaderView(viewHeader);
+                recyclerView.setAdapter(rvHomeAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                refreshLayout.finishRefresh();
+                rvHomeAdapter.notifyDataSetChanged();
+                break;
+
+            case STATE_MORE:
+                rvHomeAdapter.addData(rvHomeAdapter.getDatas().size() + 1, articleDatas);
+                recyclerView.scrollToPosition(rvHomeAdapter.getDatas().size() + 1);
+                refreshLayout.finishLoadMore();
+                break;
+
         }
+        // 设置item及item中控件的点击事件
+        rvHomeAdapter.setOnItemClickListener(MyItemClickListener);
+
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        tvArticle=view.findViewById(R.id.tv_article);
+    /**
+     * item＋item里的控件点击监听事件
+     */
+    private RvHomeAdapter.OnItemClickListener MyItemClickListener = new RvHomeAdapter.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(View v, int position) {
+            switch (v.getId()) {
 
 
-        if(!TextUtils.isEmpty(mParam1)){
-            tvArticle.setText(mParam1);
+            }
         }
 
+        @Override
+        public void onItemLongClick(View v) {
 
+        }
+    };
+
+    /**
+     * 首页文章列表
+     *
+     * @param model
+     */
+    @Override
+    public void getArticleData(ArticleModel model) {
+
+        articleDatas = (List<ArticleDatasBean>) model.getData();
+
+        for (int i = 0; i < articleDatas.size(); i++) {
+            title = articleDatas.get(i).getTitle();
+            titleList.add(title);
+            link = articleDatas.get(i).getLink();
+            linkList.add(link);
+
+        }
+        if (articleDatas.size() < 0) {
+
+        } else
+            showData();
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        initRecyclerView();
+        initRefreshLayout();
+
+
+        if (articleDatas.size() >= 0) {
+
+            linkList.clear();
+            titleList.clear();
+
+            articleDatas.clear();
+
+            rvHomeAdapter.clearData();
+
+        }
+
+        articlePresenter.loadArticle(this.getContext(), String.valueOf(page));
+
+        initTitleEvent();
 
     }
 }
