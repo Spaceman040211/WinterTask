@@ -1,9 +1,7 @@
 package com.example.progresseveryday.fragment;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -24,11 +22,9 @@ import android.widget.ImageView;
 
 import com.example.progresseveryday.R;
 import com.example.progresseveryday.adapter.RvHomeAdapter;
-import com.example.progresseveryday.model.ArticleData;
 import com.example.progresseveryday.model.ArticleDatasBean;
 import com.example.progresseveryday.model.ArticleModel;
 import com.example.progresseveryday.presenter.ArticlePresenter;
-import com.example.progresseveryday.utils.StatusBarUtil;
 import com.example.progresseveryday.view.ArticleView;
 import com.example.progresseveryday.views.IosLoadDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
