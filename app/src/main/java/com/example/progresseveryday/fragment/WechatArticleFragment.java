@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -34,8 +35,6 @@ import butterknife.ButterKnife;
 
 /**
  * <pre>
- *      author:LHT
- *      time:2019/4/30
  *      desc:微信公众号推文 Fragment
  * </pre>
  */
