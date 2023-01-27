@@ -1,7 +1,5 @@
 package com.example.progresseveryday.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
@@ -17,7 +15,6 @@ import com.example.progresseveryday.bean.Tab;
 import com.example.progresseveryday.fragment.HomeFragment;
 import com.example.progresseveryday.fragment.KnowledgeFragment;
 import com.example.progresseveryday.fragment.PersonFragment;
-import com.example.progresseveryday.fragment.SystemFragment;
 import com.example.progresseveryday.fragment.WechatFragment;
 import com.example.progresseveryday.utils.ActivityManager;
 
