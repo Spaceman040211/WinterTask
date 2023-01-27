@@ -20,4 +20,11 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+
+    <string name="action_settings">Setting</string>
+    <string name="home">首页</string>
+    <string name="hot">知识体系</string>
+    <string name="catagory">公众号</string>
+    <string name="mine">我的</string>
 </resources>
