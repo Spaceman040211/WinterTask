@@ -1,7 +1,6 @@
 package com.example.progresseveryday.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
+
+import androidx.fragment.app.FragmentTabHost;
 
 import com.example.progresseveryday.R;
 import com.example.progresseveryday.bean.Tab;
