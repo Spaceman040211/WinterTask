@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
 
-    <android.support.design.widget.TabLayout
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/tablayout_details"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -20,13 +20,13 @@
         app:tabIndicatorFullWidth="true"
         app:tabMode="scrollable"
         android:background="@color/white">
-    </android.support.design.widget.TabLayout>
+    </androidx.viewpager2.widget.ViewPager2>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager2.widget.ViewPager2>
 
 
 </LinearLayout>

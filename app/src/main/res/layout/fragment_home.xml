@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -16,7 +16,7 @@
             android:layout_height="match_parent">
 
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -24,7 +24,7 @@
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.viewpager2.widget.ViewPager2>
 
     <FrameLayout
         android:id="@+id/framelayout"
