@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.example.progresseveryday.R;
-import com.example.progresseveryday.adapter.RvKnowledgeAdapter;
 import com.example.progresseveryday.adapter.RvSystemArticleAdapter;
 import com.example.progresseveryday.model.SystemArticleListDatasBean;
 import com.example.progresseveryday.model.SystemArticleListModel;

@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentTabHost;
 import com.example.progresseveryday.R;
 import com.example.progresseveryday.bean.Tab;
 import com.example.progresseveryday.fragment.HomeFragment;
-import com.example.progresseveryday.fragment.KnowledgeFragment;
 import com.example.progresseveryday.fragment.PersonFragment;
 import com.example.progresseveryday.fragment.WechatFragment;
 import com.example.progresseveryday.utils.ActivityManager;
@@ -69,7 +68,7 @@ public class MainActivity extends BaseActivity {
     private void initTab() {
 
         Tab tab_home = new Tab(R.string.home,R.drawable.selector_home_bg, HomeFragment.class);
-        Tab tab_hot = new Tab(R.string.hot,R.drawable.selector_question, KnowledgeFragment.class);
+        Tab tab_hot = new Tab(R.string.hot,R.drawable.selector_question, KnowledgeActivity.class);
         Tab tab_category = new Tab(R.string.catagory,R.drawable.selector_find, WechatFragment.class);
         Tab tab_mine = new Tab(R.string.mine,R.drawable.selector_myself, PersonFragment.class);
 
